@@ -1,0 +1,85 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * MailingList plugin for Craft CMS 3.x
+ *
+ * MailingList Settings.twig
+ *
+ * @author    Kristaps Drivnieks
+ * @copyright Copyright (c) 2021 Kristaps Drivnieks
+ * @link      https://github.com/Kris-Driv
+ * @package   MailingList
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("krisdrivmailing\\mailinglist\\assetbundles\\mailinglist\\MailingListAsset") %}
+
+<style>
+.alert {
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    margin: 1rem;
+    background-color: #e4edf6;
+}
+</style>
+
+{% set message = craft.app.session.getFlash('message') %}
+{% if message|length > 0 %}
+<div class="alert">
+    {{ message }}
+</div>
+{% endif %}
+
+{{ forms.textField({
+    label: 'API Key',
+    instructions: 'Enter your ConstantContact API key',
+    id: 'apiKey',
+    name: 'apiKey',
+    value: settings['apiKey']})
+}}
+
+{{ forms.textField({
+    label: 'API Secret',
+    instructions: 'Enter your ConstantContact Secret string',
+    id: 'secret',
+    name: 'secret',
+    value: settings['secret']})
+}}
+
+{{ forms.textField({
+    label: 'Redirect URI',
+    instructions: 'Enter redirect uri, should match the one listed in application settings',
+    id: 'redirectUri',
+    name: 'redirectUri',
+    value: settings['redirectUri']})
+}}
+
+{{ forms.textField({
+    label: 'Current Access Token (dont change manually)',
+    instructions: 'Access token will be automatically acquired through OAuth2 authentication process using credentials given above',
+    id: 'accessToken',
+    name: 'accessToken',
+    value: settings['accessToken'],
+    disabled: true})
+}}
+
+{{ forms.textField({
+    label: 'Refresh token (dont change manually)',
+    instructions: 'Used to retrieve or prolong the current access time',
+    id: 'refreshToken',
+    name: 'refreshToken',
+    value: settings['refreshToken'],
+    disabled: true})
+}}
+
+<div id="action-button" class="flex">
+    <div class="btngroup">
+        <a class="btn submit" href="/mailing/auth-start">Authorize</a>
+    </div>
+    <div class="btngroup" style="margin-left: 1rem;">
+        <a class="btn submit" href="/mailing/auth-clear">Clear Session</a>
+    </div>
+</div>

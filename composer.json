@@ -1,0 +1,45 @@
+{
+    "name": "krisdrivmailing/mailing-list",
+    "description": "Synchronize Craft user contact data with ConstantConntact API integration",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "mailinglist"
+    ],
+    "support": {
+        "docs": "https://github.com/Kris-Driv/mailing-list/blob/master/README.md",
+        "issues": "https://github.com/Kris-Driv/mailing-list/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kristaps Drivnieks",
+            "homepage": "https://github.com/Kris-Driv"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+          "krisdrivmailing\\mailinglist\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "MailingList",
+        "handle": "mailing-list",
+        "developer": "Kristaps Drivnieks",
+        "developerUrl": "https://github.com/Kris-Driv",
+        "documentationUrl": "https://github.com/Kris-Driv/mailing-list/blob/master/README.md",
+        "changelogUrl": "https://raw.githubusercontent.com/Kris-Driv/mailing-list/master/CHANGELOG.md",
+        "components": {
+            "synchronizeService": "krisdrivmailing\\mailinglist\\services\\SynchronizeService",
+            "contactUpdateService": "krisdrivmailing\\mailinglist\\services\\ContactUpdateService"
+        },
+        "class": "krisdrivmailing\\mailinglist\\MailingList"
+    }
+}
