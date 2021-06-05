@@ -60,7 +60,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            ['apiKey', 'secret', 'redirectUri', 'accessToken', 'refreshToken'], 'string'
+            [['apiKey', 'secret', 'redirectUri', 'accessToken', 'refreshToken'], 'string']
         ];
     }
 }

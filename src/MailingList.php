@@ -24,7 +24,7 @@ use craft\web\UrlManager;
 use craft\services\Dashboard;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
-
+use krisdrivmailing\mailinglist\integrations\ConstantContact3;
 use yii\base\Event;
 
 class MailingList extends Plugin
@@ -64,6 +64,11 @@ class MailingList extends Plugin
      */
     public $hasCpSection = false;
 
+    /**
+     * @var ConstantContact3
+     */
+    public $constantContact = null;
+
     // Public Methods
     // =========================================================================
 
@@ -82,16 +87,8 @@ class MailingList extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules['siteActionTrigger1'] = 'mailing-list/default';
-            }
-        );
-
-        // Register our CP routes
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                $event->rules['cpActionTrigger1'] = 'mailing-list/default/do-something';
+                $event->rules['mailing/auth-start'] = 'mailing-list/integration-auth/start-o-auth-process';
+                $event->rules['mailing/auth-handle'] = 'mailing-list/integration-auth/handle-o-auth-redirect';
             }
         );
 
@@ -114,6 +111,8 @@ class MailingList extends Plugin
                 }
             }
         );
+
+        $this->constantContact = new ConstantContact3($this->settings);
 
         Craft::info(
             Craft::t(

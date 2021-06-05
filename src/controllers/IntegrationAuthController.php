@@ -1,7 +1,7 @@
 <?php
 namespace krisdrivmailing\mailinglist\controllers;
 
-use krisdrivmailing\mailinglist\exceptions\IntegrationException as ExceptionsIntegrationException;
+use krisdrivmailing\mailinglist\exceptions\IntegrationException;
 use krisdrivmailing\mailinglist\MailingList;
 use craft\web\Controller;
 use yii\web\Response;
@@ -24,7 +24,13 @@ class IntegrationAuthController extends Controller
 
     public function actionStartOAuthProcess(): Response
     {
-        MailingList::$plugin->constantContact->initiateAuthentication();
+        try {
+            MailingList::$plugin->constantContact->initiateAuthentication();
+        } catch (IntegrationException $e) {
+            \Craft::$app->session->setFlash('message', 'IntegrationException (Init auth): ' . $e->getMessage());
+
+            return $this->redirect('/admin/settings/plugins/mailing-list');
+        }
     }
 
     /**
@@ -33,15 +39,19 @@ class IntegrationAuthController extends Controller
      */
     public function actionHandleOAuthRedirect(string $handle = null): Response
     {
-        if (($code = \Craft::$app->request->getParam('code'))) {
-            $response = $this->handleAuthorization($code);
+        try {
+            if (($code = \Craft::$app->request->getParam('code'))) {
+                $response = $this->handleAuthorization($code);
 
-            if (null !== $response) {
-                return $response;
+                if (null !== $response) {
+                    return $response;
+                }
             }
-        }
 
-        \Craft::$app->session->setFlash('message', 'Error');
+            \Craft::$app->session->setFlash('message', 'Error');
+        } catch (IntegrationException $e) {
+            \Craft::$app->session->setFlash('message', 'IntegrationException (Handling redirect): ' . $e->getMessage());
+        }
 
         return $this->redirect('/admin/settings/plugins/mailing-list');
     }
@@ -78,12 +88,15 @@ class IntegrationAuthController extends Controller
      */
     private function handleAuthorization($code)
     {
-        // TODO
-        $accessToken = MailingList::$plugin->constantContact->fetchAccessToken($code);
+        try {
+            $accessToken = MailingList::$plugin->constantContact->fetchAccessToken($code);
 
-        MailingList::$plugin->constantContact->setSetting('accessToken', $accessToken);
-        
-        \Craft::$app->session->setFlash('message', 'Access token retrieved successfully!');
+            MailingList::$plugin->constantContact->setSetting('accessToken', $accessToken);
+            
+            \Craft::$app->session->setFlash('message', 'Access token retrieved successfully!');
+        } catch (IntegrationException $e) {
+            \Craft::$app->session->setFlash('message', 'IntegrationException (Retrieving token): ' . $e->getMessage());
+        }
 
         return $this->redirect('/admin/settings/plugins/mailing-list');
     }
