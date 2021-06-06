@@ -89,6 +89,9 @@ class MailingList extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['mailing/auth-start'] = 'mailing-list/integration-auth/start-o-auth-process';
                 $event->rules['mailing/auth-handle'] = 'mailing-list/integration-auth/handle-o-auth-redirect';
+
+                $event->rules['mailing/fetch/lists'] = 'mailing-list/integration-calls/get-lists';
+                $event->rules['mailing/fetch/contacts/<listId>'] = 'mailing-list/integration-calls/get-contacts';
             }
         );
 

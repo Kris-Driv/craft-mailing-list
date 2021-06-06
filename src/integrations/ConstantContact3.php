@@ -184,6 +184,37 @@ class ConstantContact3
         return $this->getSetting('accessToken');
     }
 
+    public function fetchContacts(...$lists): array
+    {
+        $client = $this->generateAuthorizedClient();
+        $endpoint = $this->getEndpoint('/contacts');
+
+        try {
+            $response = $client->get($endpoint, [
+                'list_id' => rtrim(implode(', ', $lists))
+            ]);
+        } catch (RequestException $e) {
+            // $responseBody = (string) $e->getResponse()->getBody();
+            // $this->getLogger()->error($responseBody, ['exception' => $e->getMessage()]);
+
+            throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
+        }
+
+        $status = $response->getStatusCode();
+        if (200 !== $status) {
+            // $this->getLogger()->error(
+            //     'Could not fetch Constant Contact lists',
+            //     ['response' => (string) $response->getBody()]
+            // );
+
+            throw new IntegrationException('Could not fetch ConstantContact lists');
+        }
+
+        $json = \GuzzleHttp\json_decode((string) $response->getBody(), false);
+
+        return $json->contacts ?? [];
+    }
+
     /**
      * Makes an API call that fetches mailing lists
      * Builds ListObject objects based on the results
@@ -204,7 +235,7 @@ class ConstantContact3
             // $responseBody = (string) $e->getResponse()->getBody();
             // $this->getLogger()->error($responseBody, ['exception' => $e->getMessage()]);
 
-            throw new IntegrationException('Could not connect to API endpoint');
+            throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
         }
 
         $status = $response->getStatusCode();
@@ -219,21 +250,7 @@ class ConstantContact3
 
         $json = \GuzzleHttp\json_decode((string) $response->getBody(), false);
 
-        $lists = [];
-        // foreach ($json->lists as $list) {
-        //     if (isset($list->list_id, $list->name)) {
-        //         $lists[] = new ListObject(
-        //             $this,
-        //             $list->list_id,
-        //             $list->name,
-        //             $this->fetchFields($list->list_id)
-        //         );
-        //     }
-        // }
-
-        return $json->lists;
-
-        // return $lists;
+        return $json->lists ?? [];
     }
 
     /**
