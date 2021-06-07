@@ -3,13 +3,22 @@
 namespace krisdrivmailing\mailinglist\listeners;
 
 use craft\elements\User;
+use krisdrivmailing\mailinglist\integrations\ElementFieldMap;
+use krisdrivmailing\mailinglist\MailingList;
 use yii\base\Event;
 
-class UserAccountListener extends AbstractListener
+class UserAccountListener
 {
+
+    /**
+     * @var ElementFieldMap
+     */
+    public $fieldMap;
 
     public function init()
     {
+        $this->fieldMap = new ElementFieldMap([]);
+
         Event::on(
             User::class,
             User::EVENT_BEFORE_SAVE,
@@ -27,14 +36,16 @@ class UserAccountListener extends AbstractListener
 
     public function onAccountUpdate(User $user)
     {
-        // Update user email
-        var_dump('User updated: ' . $user->getName());
+        $data = $this->fieldMap->mapUserFields($user);
+
+        MailingList::$plugin->constantContact->createOrUpdateContact($data, MailingList::$plugin->settings->listId);
     }
 
     public function onAccountCreation(User $user)
     {
-        // Create new contact
-        var_dump('User created: ' . $user->getName());
+        $data = $this->fieldMap->mapUserFields($user);
+
+        MailingList::$plugin->constantContact->createOrUpdateContact($data, MailingList::$plugin->settings->listId);
     }
 
 }

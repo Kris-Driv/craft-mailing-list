@@ -4,6 +4,7 @@ namespace krisdrivmailing\mailinglist\integrations;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\RequestOptions;
 use Solspace\Freeform\Library\Integrations\MailingLists\DataObjects\ListObject;
 use krisdrivmailing\mailinglist\exceptions\IntegrationException;
 use krisdrivmailing\mailinglist\MailingList;
@@ -194,23 +195,16 @@ class ConstantContact3
                 'list_id' => rtrim(implode(', ', $lists))
             ]);
         } catch (RequestException $e) {
-            // $responseBody = (string) $e->getResponse()->getBody();
-            // $this->getLogger()->error($responseBody, ['exception' => $e->getMessage()]);
-
             throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
         }
 
         $status = $response->getStatusCode();
         if (200 !== $status) {
-            // $this->getLogger()->error(
-            //     'Could not fetch Constant Contact lists',
-            //     ['response' => (string) $response->getBody()]
-            // );
 
             throw new IntegrationException('Could not fetch ConstantContact lists');
         }
 
-        $json = \GuzzleHttp\json_decode((string) $response->getBody(), false);
+        $json = json_decode((string) $response->getBody(), false);
 
         return $json->contacts ?? [];
     }
@@ -232,25 +226,73 @@ class ConstantContact3
         try {
             $response = $client->get($endpoint);
         } catch (RequestException $e) {
-            // $responseBody = (string) $e->getResponse()->getBody();
-            // $this->getLogger()->error($responseBody, ['exception' => $e->getMessage()]);
+            throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
+        }
+
+        $status = $response->getStatusCode();
+        if (!in_array($status, [200, 201], true)) {
+
+            throw new IntegrationException('Could not fetch ConstantContact lists. (status: ' . $status);
+        }
+
+        $json = json_decode((string) $response->getBody(), false);
+
+        return $json->lists ?? [];
+    }
+
+    public function createOrUpdateContact(array $contact, ?string $listId): array
+    {
+        $client = $this->generateAuthorizedClient();
+        $endpoint = $this->getEndpoint('/contacts/sign_up_form');
+
+        try {
+            $listMemberships = ['list_memberships' => [$listId]];
+
+            $requestBody = [ 
+                RequestOptions::JSON => array_merge($contact, $listMemberships) 
+            ];
+            
+            $response = $client->post($endpoint, $requestBody);
+        } catch (RequestException $e) {
+            throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
+        }
+
+        $status = $response->getStatusCode();
+        if (200 !== $status) {
+            throw new IntegrationException('Could not fetch ConstantContact lists');
+        }
+
+        $json = json_decode((string) $response->getBody(), true);
+
+        return $json ?? [];
+    }
+
+    public function updateContact(string $contactId, array $data): array
+    {
+        $client = $this->generateAuthorizedClient();
+        $endpoint = $this->getEndpoint('/contacts/'.$contactId);
+
+        $data['email_address'] = [
+            'address' => $data['email_address']
+        ];
+
+        try {
+            $response = $client->put($endpoint, [ 
+                RequestOptions::JSON => $data
+            ]);
+        } catch (RequestException $e) {
 
             throw new IntegrationException('Could not connect to API endpoint: ' . $e->getMessage());
         }
 
         $status = $response->getStatusCode();
         if (200 !== $status) {
-            // $this->getLogger()->error(
-            //     'Could not fetch Constant Contact lists',
-            //     ['response' => (string) $response->getBody()]
-            // );
-
             throw new IntegrationException('Could not fetch ConstantContact lists');
         }
 
-        $json = \GuzzleHttp\json_decode((string) $response->getBody(), false);
+        $json = json_decode((string) $response->getBody(), true);
 
-        return $json->lists ?? [];
+        return $json ?? [];
     }
 
     /**

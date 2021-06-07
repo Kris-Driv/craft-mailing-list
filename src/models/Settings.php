@@ -44,6 +44,8 @@ class Settings extends Model
 
     public $refreshToken;
 
+    public $listId;
+
     // Public Methods
     // =========================================================================
 
@@ -60,7 +62,7 @@ class Settings extends Model
     public function rules()
     {
         return [
-            [['apiKey', 'secret', 'redirectUri', 'accessToken', 'refreshToken'], 'string']
+            [['apiKey', 'secret', 'redirectUri', 'accessToken', 'refreshToken', 'listId'], 'string']
         ];
     }
 }

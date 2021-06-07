@@ -25,6 +25,7 @@ use craft\services\Dashboard;
 use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterUrlRulesEvent;
 use krisdrivmailing\mailinglist\integrations\ConstantContact3;
+use krisdrivmailing\mailinglist\listeners\UserAccountListener;
 use yii\base\Event;
 
 class MailingList extends Plugin
@@ -116,6 +117,12 @@ class MailingList extends Plugin
         );
 
         $this->constantContact = new ConstantContact3($this->settings);
+
+        array_map(function($listener) {
+            $listener->init();
+        }, [
+            new UserAccountListener()
+        ]);
 
         Craft::info(
             Craft::t(

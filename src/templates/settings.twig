@@ -58,6 +58,14 @@
 }}
 
 {{ forms.textField({
+    label: 'List ID',
+    instructions: 'Enter your main list id where registered users will be assigned',
+    id: 'listId',
+    name: 'listId',
+    value: settings['listId']})
+}}
+
+{{ forms.textField({
     label: 'Current Access Token (dont change manually)',
     instructions: 'Access token will be automatically acquired through OAuth2 authentication process using credentials given above',
     id: 'accessToken',
