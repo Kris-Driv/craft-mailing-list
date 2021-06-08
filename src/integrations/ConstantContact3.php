@@ -377,7 +377,7 @@ class ConstantContact3
                 ]
             );
 
-            $json = \GuzzleHttp\json_decode((string) $response->getBody());
+            $json = json_decode((string) $response->getBody());
             if (!isset($json->access_token)) {
                 throw new IntegrationException("No 'access_token' present in auth response for Constant Contact");
             }
