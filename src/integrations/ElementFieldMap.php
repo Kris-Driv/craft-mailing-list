@@ -31,43 +31,43 @@ class ElementFieldMap
             ];
         }
 
-        // $map['custom_fields'] = [
-        //     [
-        //         'custom_field_id' => '874fc484-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->dob->format('Y-m-d')
-        //     ],
-        //     [
-        //         'custom_field_id' => '87518fe4-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->gender->value
-        //     ],
-        //     [
-        //         'custom_field_id' => '87530fcc-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->nationality->value
-        //     ],
-        //     [
-        //         'custom_field_id' => '87546fca-bfa1-11eb-8e91-fa163eed61c',
-        //         'value' => $user->ethnicBackground->value
-        //     ]
-        // ];
-
         $map['custom_fields'] = [
             [
-                'custom_field_id' => 'c5ee0598-c906-11eb-abe1-fa163e5bc304',
+                'custom_field_id' => '874fc484-bfa1-11eb-8e91-fa163eed61c9',
                 'value' => $user->dob->format('Y-m-d')
             ],
             [
-                'custom_field_id' => 'fa701fd8-c6f2-11eb-8fef-fa163ecbdd18',
+                'custom_field_id' => '87518fe4-bfa1-11eb-8e91-fa163eed61c9',
                 'value' => $user->gender->value
             ],
             [
-                'custom_field_id' => 'f576fbaa-c6f2-11eb-bd78-fa163e24df6a',
+                'custom_field_id' => '87530fcc-bfa1-11eb-8e91-fa163eed61c9',
                 'value' => $user->nationality->value
             ],
             [
-                'custom_field_id' => 'c5ef6884-c906-11eb-abe1-fa163e5bc304',
+                'custom_field_id' => '87546fca-bfa1-11eb-8e91-fa163eed61c',
                 'value' => $user->ethnicBackground->value
             ]
         ];
+
+        // $map['custom_fields'] = [
+        //     [
+        //         'custom_field_id' => 'c5ee0598-c906-11eb-abe1-fa163e5bc304',
+        //         'value' => $user->dob->format('Y-m-d')
+        //     ],
+        //     [
+        //         'custom_field_id' => 'fa701fd8-c6f2-11eb-8fef-fa163ecbdd18',
+        //         'value' => $user->gender->value
+        //     ],
+        //     [
+        //         'custom_field_id' => 'f576fbaa-c6f2-11eb-bd78-fa163e24df6a',
+        //         'value' => $user->nationality->value
+        //     ],
+        //     [
+        //         'custom_field_id' => 'c5ef6884-c906-11eb-abe1-fa163e5bc304',
+        //         'value' => $user->ethnicBackground->value
+        //     ]
+        // ];
 
         // Will be set later
         // $map['list_memberships'] = [];
