@@ -50,7 +50,9 @@ class ElementFieldMap
             ]
         ];
 
-        $map['custom_fields'] = array_filter($map['custom_fields'], fn($field) => !empty($field['value']));
+        $map['custom_fields'] = array_filter($map['custom_fields'], function($field) {
+            return !empty($field['value']);
+        });
 
         // $map['custom_fields'] = [
         //     [
