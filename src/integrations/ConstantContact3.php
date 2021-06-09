@@ -277,6 +277,7 @@ class ConstantContact3
         ];
 
         $data['update_source'] = $updateSource;
+        $data['permission_to_send'] = 'explicit';
 
         try {
             $response = $client->put($endpoint, [ 

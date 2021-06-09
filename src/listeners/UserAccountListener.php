@@ -84,7 +84,7 @@ class UserAccountListener
             }
 
             if(isset($contactMap) && $contactMap) {
-                $response = MailingList::$plugin->constantContact->updateContact($contactMap->contact_id, $data);
+                $response = MailingList::$plugin->constantContact->updateContact($contactMap->contact_id, $data, "Contact");
             } else {
                 $response = MailingList::$plugin->constantContact->createOrUpdateContact($data, MailingList::$plugin->settings->listId);
             }
