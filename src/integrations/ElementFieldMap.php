@@ -34,7 +34,7 @@ class ElementFieldMap
         $map['custom_fields'] = [
             [
                 'custom_field_id' => '874fc484-bfa1-11eb-8e91-fa163eed61c9',
-                'value' => $user->dob->format('Y-m-d')
+                'value' => $user->dob ? $user->dob->format('Y-m-d') : null
             ],
             [
                 'custom_field_id' => '87518fe4-bfa1-11eb-8e91-fa163eed61c9',
@@ -49,6 +49,8 @@ class ElementFieldMap
                 'value' => $user->ethnicBackground->value
             ]
         ];
+
+        $map['custom_fields'] = array_filter($map['custom_fields'], fn($field) => !empty($field['value']));
 
         // $map['custom_fields'] = [
         //     [

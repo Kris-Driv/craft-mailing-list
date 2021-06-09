@@ -98,7 +98,6 @@ class UserAccountListener
 
             }
         } catch(IntegrationException $e) {
-            throw $e;
             Craft::warning($e->getMessage(), "application");
         }
     }

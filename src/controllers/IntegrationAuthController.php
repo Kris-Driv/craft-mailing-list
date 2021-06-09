@@ -29,7 +29,7 @@ class IntegrationAuthController extends Controller
         } catch (IntegrationException $e) {
             \Craft::$app->session->setFlash('message', 'IntegrationException (Init auth): ' . $e->getMessage());
 
-            return $this->redirect('/admin/settings/plugins/mailing-list');
+            return $this->redirect('/'.Craft::$app->config->general->cpTrigger.'/settings/plugins/mailing-list');
         }
     }
 
@@ -53,7 +53,7 @@ class IntegrationAuthController extends Controller
             \Craft::$app->session->setFlash('message', 'IntegrationException (Handling redirect): ' . $e->getMessage());
         }
 
-        return $this->redirect('/admin/settings/plugins/mailing-list');
+        return $this->redirect('/'.Craft::$app->config->general->cpTrigger.'/settings/plugins/mailing-list');
     }
 
      /**
@@ -66,7 +66,7 @@ class IntegrationAuthController extends Controller
 
         \Craft::$app->session->setFlash('message', 'Session has been cleared');
 
-        return $this->redirect('/admin/settings/plugins/mailing-list');
+        return $this->redirect('/'.Craft::$app->config->general->cpTrigger.'/settings/plugins/mailing-list');
     }
 
     /**
@@ -98,7 +98,7 @@ class IntegrationAuthController extends Controller
             \Craft::$app->session->setFlash('message', 'IntegrationException (Retrieving token): ' . $e->getMessage());
         }
 
-        return $this->redirect('/admin/settings/plugins/mailing-list');
+        return $this->redirect('/'.Craft::$app->config->general->cpTrigger.'/settings/plugins/mailing-list');
     }
 
 }
