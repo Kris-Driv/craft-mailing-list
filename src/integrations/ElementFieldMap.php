@@ -25,44 +25,44 @@ class ElementFieldMap
             'last_name' => $user->lastName,
         ]);
 
-        // if(isset($user->mobile_number)) {
-        //     $map['phone_numbers'] = [
-        //         ['phone_number' => $user->phone_number, 'kind' => 'mobile']
-        //     ];
-        // }
+        if(isset($user->mobilePhone)) {
+            $map['phone_numbers'] = [
+                ['phone_number' => $user->mobilePhone, 'kind' => 'mobile']
+            ];
+        }
 
-        // $map['custom_fields'] = [
-        //     [
-        //         'custom_field_id' => '874fc484-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->dob
-        //     ],
-        //     [
-        //         'custom_field_id' => '87518fe4-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->gender
-        //     ],
-        //     [
-        //         'custom_field_id' => '87530fcc-bfa1-11eb-8e91-fa163eed61c9',
-        //         'value' => $user->nationality
-        //     ],
-        //     [
-        //         'custom_field_id' => '87546fca-bfa1-11eb-8e91-fa163eed61c',
-        //         'value' => $user->ethnic_background
-        //     ]
-        // ];
+        $map['custom_fields'] = [
+            [
+                'custom_field_id' => '874fc484-bfa1-11eb-8e91-fa163eed61c9',
+                'value' => $user->dob->format('Y-m-d')
+            ],
+            [
+                'custom_field_id' => '87518fe4-bfa1-11eb-8e91-fa163eed61c9',
+                'value' => $user->gender->value
+            ],
+            [
+                'custom_field_id' => '87530fcc-bfa1-11eb-8e91-fa163eed61c9',
+                'value' => $user->nationality->value
+            ],
+            [
+                'custom_field_id' => '87546fca-bfa1-11eb-8e91-fa163eed61c',
+                'value' => $user->ethnicBackground->value
+            ]
+        ];
 
         // Will be set later
         // $map['list_memberships'] = [];
 
-        // $map['street_addresses'] = [
-        //     [
-        //         "kind" => "home",
-        //         "street" => null,
-        //         "city" => null,
-        //         "state" => null,
-        //         "postal_code" => null,
-        //         "country" => "United Kingdom"
-        //     ]
-        // ];
+        $map['street_addresses'] = [
+            [
+                "kind" => "home",
+                "street" => $user->addressLine1,
+                "city" => $user->townOrCity,
+                "state" => $user->county,
+                "postal_code" => $user->postcode,
+                "country" => "United Kingdom"
+            ]
+        ];
 
         return $map;
     }

@@ -17,7 +17,10 @@ class Install extends Migration
     {
         $this->createTable('constant_contact_user_map', [
             'user_id' => 'int(11) NOT NULL',
-            'contact_id' => 'VARCHAR(255)'
+            'contact_id' => 'VARCHAR(255)',
+            'dateCreated' => 'DATETIME',
+            'dateUpdated' => 'DATETIME',
+            'uid' => 'char(36) COLLATE utf8_unicode_ci NOT NULL DEFAULT \'0\''
         ]);
 
         $this->addForeignKey('fk_user_id_constant_user_map', 'constant_contact_user_map', 'user_id', 'users', 'id', 'CASCADE', 'CASCADE');

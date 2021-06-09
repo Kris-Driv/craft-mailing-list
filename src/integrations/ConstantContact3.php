@@ -258,7 +258,7 @@ class ConstantContact3
         }
 
         $status = $response->getStatusCode();
-        if (200 !== $status) {
+        if (!\in_array($status, [200, 201])) {
             throw new IntegrationException('Could not fetch ConstantContact lists');
         }
 
