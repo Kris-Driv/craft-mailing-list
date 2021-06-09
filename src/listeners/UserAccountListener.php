@@ -23,6 +23,11 @@ class UserAccountListener
      */
     public $creation = false;
 
+    /**
+     * @var bool
+     */
+    public $emailChanged = false;
+
     public function init()
     {
         $this->fieldMap = new ElementFieldMap([]);
@@ -31,7 +36,11 @@ class UserAccountListener
             User::class,
             User::EVENT_BEFORE_SAVE,
             function($event) {
-                $user = User::findIdentity($event->sender->getId());
+                $user = User::find()->id($event->sender->getId())->anyStatus()->one();
+
+                if($user->email !== $event->sender->email) {
+                    $this->emailChanged = true;
+                }
 
                 if($user) {
                     $this->creation = true;
@@ -70,7 +79,15 @@ class UserAccountListener
         $data = $this->fieldMap->mapUserFields($user);
 
         try {
-            $response = MailingList::$plugin->constantContact->createOrUpdateContact($data, MailingList::$plugin->settings->listId);
+            if($this->emailChanged) {
+                $contactMap = ConstantContactUserMap::findOne(['user_id' => $user->getId()]);
+            }
+
+            if(isset($contactMap) && $contactMap) {
+                $response = MailingList::$plugin->constantContact->updateContact($contactMap->contact_id, $data);
+            } else {
+                $response = MailingList::$plugin->constantContact->createOrUpdateContact($data, MailingList::$plugin->settings->listId);
+            }
             
             if(isset($response['contact_id']) && $user->getId()) {
                 
@@ -81,6 +98,7 @@ class UserAccountListener
 
             }
         } catch(IntegrationException $e) {
+            throw $e;
             Craft::warning($e->getMessage(), "application");
         }
     }

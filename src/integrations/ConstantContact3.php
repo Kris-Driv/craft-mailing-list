@@ -267,7 +267,7 @@ class ConstantContact3
         return $json ?? [];
     }
 
-    public function updateContact(string $contactId, array $data): array
+    public function updateContact(string $contactId, array $data, string $updateSource = "Account"): array
     {
         $client = $this->generateAuthorizedClient();
         $endpoint = $this->getEndpoint('/contacts/'.$contactId);
@@ -275,6 +275,8 @@ class ConstantContact3
         $data['email_address'] = [
             'address' => $data['email_address']
         ];
+
+        $data['update_source'] = $updateSource;
 
         try {
             $response = $client->put($endpoint, [ 
